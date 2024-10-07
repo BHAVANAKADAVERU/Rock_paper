@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odin Projects</title>
+    <title>Rock Paper Scissors</title>
     <style>
         body {
             background-color: #cdd6d5;
@@ -65,7 +65,13 @@
     <div class="header">
         <h1>Rock Paper Scissors</h1>
     </div>
-    <div class="play">
+    <div class="play" id="modeSelection">
+        <h2>Select Mode</h2>
+        <button onclick="startGame('player')">Player vs Player</button>
+        <button onclick="startGame('computer')">Player vs Computer</button>
+    </div>
+    
+    <div class="play" id="game" style="display: none;">
         <div class="res-box">
             <p id="res" style="color: black"></p>
         </div>
@@ -75,29 +81,66 @@
             <button onclick="play('paper')">Paper</button>
             <button onclick="play('scissors')">Scissors</button>
         </div>
+        <div id="secondPlayer" style="display: none;">
+            <p>Second Player's Turn:</p>
+            <div class="btn">  
+                <button onclick="playSecondPlayer('rock')">Rock</button>
+                <button onclick="playSecondPlayer('paper')">Paper</button>
+                <button onclick="playSecondPlayer('scissors')">Scissors</button>
+            </div>
+        </div>
     </div>
+
     <script>
+        let player1Choice = '';
+        let player2Choice = '';
+        let gameMode = '';
+
+        function startGame(mode) {
+            gameMode = mode;
+            document.getElementById('modeSelection').style.display = 'none';
+            document.getElementById('game').style.display = 'block';
+            document.getElementById('res').innerText = ''; // Reset result text
+            document.getElementById('secondPlayer').style.display = mode === 'player' ? 'block' : 'none';
+        }
+
         function getRandomInt(max) {
             return Math.floor(Math.random() * max);
         }
-        function play(userChoice) {
-            const choices = ['rock', 'paper', 'scissors'];
-            const compChoice = choices[getRandomInt(3)];
+
+        function play(choice) {
+            player1Choice = choice;
+            if (gameMode === 'computer') {
+                let compChoice = ['rock', 'paper', 'scissors'][getRandomInt(3)];
+                determineWinner(player1Choice, compChoice);
+            } else {
+                document.getElementById('res').innerText = `Player 1 chose: ${choice}. Now, Player 2's turn.`;
+            }
+        }
+
+        function playSecondPlayer(choice) {
+            player2Choice = choice;
+            determineWinner(player1Choice, player2Choice);
+        }
+
+        function determineWinner(choice1, choice2) {
             let result;
 
-            if (userChoice === compChoice) {
+            if (choice1 === choice2) {
                 result = "It's a tie!";
             } else if (
-                (userChoice === 'rock' && compChoice === 'scissors') ||
-                (userChoice === 'paper' && compChoice === 'rock') ||
-                (userChoice === 'scissors' && compChoice === 'paper')
+                (choice1 === 'rock' && choice2 === 'scissors') ||
+                (choice1 === 'paper' && choice2 === 'rock') ||
+                (choice1 === 'scissors' && choice2 === 'paper')
             ) {
-                result = "You won!";
+                result = "Player 1 won!";
             } else {
-                result = "Computer won!";
+                result = gameMode === 'computer' ? "Computer won!" : "Player 2 won!";
             }
 
-            document.getElementById('res').innerText = `You chose: ${userChoice}\nComputer chose: ${compChoice}\n${result}`;
+            document.getElementById('res').innerText = `Player 1 chose: ${choice1}\n${gameMode === 'computer' ? 'Computer' : 'Player 2'} chose: ${choice2}\n${result}`;
+            player1Choice = ''; // Reset choices for the next round
+            player2Choice = '';
         }
     </script>
 </body>
