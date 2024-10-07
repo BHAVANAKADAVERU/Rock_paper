@@ -1,1 +1,1 @@
-# Rock_paper
+Rock Paper Scissors is a classic hand game typically played between two players, where the objective is to choose a gesture that defeats the opponent's gesture based on simple rules. The three possible gestures are Rock (which crushes Scissors), Paper (which covers Rock), and Scissors (which cuts Paper)
